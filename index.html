@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flower Garden</title>
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.48/build/spline-viewer.js"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: white;
+      overflow: hidden;
+      color: #f9f9f9;
+    }
+   * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+     .about-section {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    max-width: 80%;
+    max-height: 80%;
+    
+    border-radius: 10px;
+    
+    display: none;
+    z-index: 100;
+    overflow: hidden; 
+  }
+
+  .about-section img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+
+  .about-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 4vw;
+    height: 4vh; 
+    background: #e74c5e;
+    color: white;
+    font-size: 1.5rem; 
+    font-weight: bold;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    text-align: center;
+    line-height: 40px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  }
+
+  .about-close:hover {
+    background: #c0392b; 
+    transform: scale(1.1);
+  }
+  .about-trigger {
+  position: absolute;
+  top: 20px;
+  right: 20px; 
+  padding: 15px 30px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.4s ease, background 0.4s ease;
+  box-shadow: 0 8px 15px rgba(255, 122, 133, 0.3);
+}
+
+.about-trigger:hover {
+  background: #e74c5e; 
+  transform: scale(1.1); 
+}
+
+    .intro {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: black;
+      z-index: 10;
+      flex-direction: column;
+    }
+
+    .intro video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .intro button {
+      padding: 15px 30px;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 40px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.4s ease, background 0.4s ease;
+      z-index: 2;
+      position: absolute;
+      bottom: 180px; 
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 100vh;
+    }
+
+    h1 {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      text-shadow: 0 4px 6px rgba(0, 0, 0, 0.8);
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .flower-card {
+      position: relative;
+      top: 5px;
+      width: 100%;
+      height: 100%;
+      border-radius: 15px;
+      overflow: hidden;
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+      display: none;
+    }
+
+    .flower-card.active {
+      display: block;
+      animation: zoomIn 1s ease-in-out;
+    }
+
+    spline-viewer {
+      width: 100%;
+      height: 100%;
+    }
+
+    .flower-label {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2rem;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      pointer-events: none;
+    }
+
+    .navigation {
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      gap: 90px;
+      z-index: 20;
+    }
+
+    .nav-button {
+      padding: 15px 30px;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.4s ease, background 0.4s ease;
+      box-shadow: 0 8px 15px rgba(255, 122, 133, 0.3);
+    }
+
+    .nav-button:hover {
+      background: #e74c5e;
+      transform: scale(1.1);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes zoomIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="about-trigger" onclick="toggleAbout()">ABOUT</button>
+
+  <div class="about-section" id="aboutSection">
+    <button class="about-close" onclick="toggleAbout()">X</button>
+    <img src="about.png" alt="About Section">
+  </div>
+
+
+  <div class="intro" id="intro">
+    <video src="back.mp4" autoplay muted loop></video>
+    <button onclick="startExperience()">Explore the Garden</button>
+  </div>
+  <video id="backgroundMusic" autoplay loop muted style="display: none;"></video>
+
+  <div class="container" id="mainContent" style="display: none;">
+    <div class="flower-card active">
+      <spline-viewer url="https://prod.spline.design/4ibfi4UGK4V1fAGT/scene.splinecode"></spline-viewer>
+      <div class="flower-label">Sakura</div>
+    </div>
+    <div class="flower-card">
+      <spline-viewer url="https://prod.spline.design/sdF0HPLtrFfBe6Dj/scene.splinecode"></spline-viewer>
+      <div class="flower-label">Wallflower</div>
+    </div>
+    <div class="flower-card">
+      <spline-viewer url="https://prod.spline.design/RuCS1aupAQ7I1JSa/scene.splinecode"></spline-viewer>
+      <div class="flower-label">Orchid</div>
+    </div>
+    <div class="flower-card">
+      <spline-viewer url="https://prod.spline.design/OzLgRR82FYhBMRVL/scene.splinecode"></spline-viewer>
+      <div class="flower-label">Lilly</div>
+    </div>
+    <div class="flower-card">
+      <spline-viewer url="https://prod.spline.design/zhkbUuNbJ2h0eBMN/scene.splinecode"></spline-viewer>
+      <div class="flower-label">Jasmine</div>
+    </div>
+    <div class="flower-card">
+      <spline-viewer url="https://prod.spline.design/WA3pbGaevuA-6ngE/scene.splinecode"></spline-viewer>
+      <div class="flower-label">Rose</div>
+    </div>
+    <div class="flower-card">
+      <spline-viewer url="https://prod.spline.design/Co-Yh58JRImnIy3q/scene.splinecode"></spline-viewer>
+      <div class="flower-label">Daffodils</div>
+    </div>
+    <div class="flower-card">
+      <spline-viewer url="https://prod.spline.design/riUFKYs4j-aY5Jkv/scene.splinecode"></spline-viewer>
+      <div class="flower-label">Poppy</div>
+    </div>
+
+    <div class="navigation">
+      <button class="nav-button" onclick="showPreviousFlower()">BACK</button>
+      <button class="nav-button" onclick="showNextFlower()">NEXT</button>
+    </div>
+  </div>
+
+  <script>
+    function toggleAbout() {
+      const aboutSection = document.getElementById('aboutSection');
+      aboutSection.style.display = aboutSection.style.display === 'block' ? 'none' : 'block';
+    }
+
+
+    const flowerCards = document.querySelectorAll('.flower-card');
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    let currentIndex = 0;
+
+    
+    const flowerData = {
+      sakura: { img: 'sakura.jpg', music: 'sakura.m4a' },
+      wallflower: { img: 'wallflower.jpg', music: 'wallflower.m4a' },
+      orchid: { img: 'orchid.jpg', music: 'orchid.m4a' },
+      lilly: { img: 'lilly.jpg', music: 'lilly.m4a' },
+      jasmine: { img: 'jasmine.jpg', music: 'jasmine.m4a' },
+      rose: { img: 'rose.jpg', music: 'rose.m4a' },
+      daffodils: { img: 'daffodils.jpg', music: 'daffodils.m4a' },
+      poppy: { img: 'poppy.jpg', music: 'poppy.m4a' }
+    };
+
+    function updateFlowerVisibility() {
+      flowerCards.forEach((card, index) => {
+        card.classList.toggle('active', index === currentIndex);
+      });
+
+      
+      const flowerName = flowerCards[currentIndex].querySelector('.flower-label').textContent.toLowerCase();
+      const flowerInfo = flowerData[flowerName];
+
+      if (flowerInfo) {
+        document.body.style.backgroundImage = `url('${flowerInfo.img}')`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'center';
+        document.body.style.backgroundRepeat = 'no-repeat';
+
+        
+        backgroundMusic.src = flowerInfo.music;
+        backgroundMusic.play();
+      }
+    }
+
+    function showNextFlower() {
+      currentIndex = (currentIndex + 1) % flowerCards.length;
+      updateFlowerVisibility();
+    }
+
+    function showPreviousFlower() {
+      currentIndex = (currentIndex - 1 + flowerCards.length) % flowerCards.length;
+      updateFlowerVisibility();
+    }
+
+    function startExperience() {
+      document.getElementById('intro').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'flex';
+      backgroundMusic.muted = false; 
+      updateFlowerVisibility();
+    }
+  </script>
+</body>
+</html>
